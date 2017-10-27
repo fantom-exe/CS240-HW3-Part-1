@@ -9,10 +9,22 @@ public final class SingleLinkedDeque<T> implements DequeInterface<T> {
 	private Node frontNode;
 	private Node backNode;
 	
+	public SingleLinkedDeque() {
+		frontNode = null;
+		backNode = null;
+	}
+	
 	/** Adds a new entry to the front/back of this dequeue.
 	 @param newEntry  An object to be added. */
 	public void addToFront(T newEntry) {
-	
+		Node newNode = new Node(newEntry, null);
+		
+		if(isEmpty())
+			frontNode = newNode;
+		else
+			backNode.setNextNode(newNode);
+		
+		backNode = newNode;
 	}
 	
 	public void addToBack(T newEntry) {
@@ -23,7 +35,18 @@ public final class SingleLinkedDeque<T> implements DequeInterface<T> {
 	 @return  The object at the front/back of the dequeue.
 	 @throws  EmptyQueueException if the dequeue is empty before the operation. */
 	public T removeFront() {
-	
+		if(isEmpty())
+			throw new EmptyQueueException();
+		
+		T front = getFront();
+		
+		frontNode.setData(null);
+		frontNode = frontNode.getNextNode();
+		
+		if(frontNode == null)
+			backNode = null;
+		
+		return front;
 	}
 	
 	public T removeBack() {
@@ -55,6 +78,11 @@ public final class SingleLinkedDeque<T> implements DequeInterface<T> {
 	private class Node {
 		private T data;
 		private Node next;
+		
+		Node(T data, Node next) {
+			this.data = data;
+			this.next = next;
+		}
 		
 		public T getData() {
 			return data;
